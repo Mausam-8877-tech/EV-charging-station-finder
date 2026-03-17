@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Population vs EV Stations - ChargeFinder</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Population vs EV JS -->
+  <script src="population_vs_ev.js" defer></script>
+</head>
+<body>
+  <header>
+    <a class="logo" href="index.html">⚡ ChargerFinder</a></div>
+    <nav>
+      <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+      <a href="stations.html"><i class="fas fa-charging-station"></i> Stations</a>
+      <a href="population_vs_ev.html"><i class="fas fa-chart-bar"></i> Population vs EV</a>
+      <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Search Filters Section -->
+    <section class="filters-section">
+      <div class="container">
+        <h1>Population vs EV Charging Stations</h1>
+        <p class="section-description">Compare population data with the number of EV charging stations by state and district</p>
+
+        <div class="filters-container">
+          <div class="filter-group">
+            <label for="stateFilter">State</label>
+            <select id="stateFilter" class="filter-dropdown">
+              <option value="">Select a State</option>
+              <!-- States will be populated by JavaScript -->
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="districtFilter">District</label>
+            <select id="districtFilter" class="filter-dropdown" disabled>
+              <option value="">All Districts</option>
+              <!-- Districts will be populated based on selected state -->
+            </select>
+          </div>
+
+          <button id="applyFilters" class="filter-button">
+            <i class="fas fa-chart-bar"></i> Generate Chart
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chart Section -->
+    <section class="chart-section">
+      <div class="container">
+        <!-- District Summary Card -->
+        <div class="district-summary-card" id="districtSummaryCard" style="display: none;">
+          <div class="summary-header">
+            <h3 id="districtName">District Summary</h3>
+          </div>
+          <div class="summary-stats">
+            <div class="stat-item">
+              <div class="stat-icon"><i class="fas fa-users"></i></div>
+              <div class="stat-content">
+                <div class="stat-label">Population</div>
+                <div class="stat-value" id="districtPopulation">0</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon"><i class="fas fa-charging-station"></i></div>
+              <div class="stat-content">
+                <div class="stat-label">EV Stations</div>
+                <div class="stat-value" id="districtEVStations">0</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+              <div class="stat-content">
+                <div class="stat-label">Stations per Million</div>
+                <div class="stat-value" id="districtRatio">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-header">
+            <h2 id="chartTitle">Select a state to view data</h2>
+            <div class="chart-stats" id="chartStats"></div>
+          </div>
+
+          <!-- Loading indicator -->
+          <div class="loading-indicator" id="loadingIndicator">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading data...</p>
+          </div>
+
+          <!-- Chart canvas -->
+          <div class="chart-wrapper" id="chartWrapper" style="display: none;">
+            <canvas id="populationVsEVChart"></canvas>
+          </div>
+
+          <!-- No data message -->
+          <div class="no-data" id="noDataMessage" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>No data available for the selected state.</p>
+            <p>Please select a different state.</p>
+          </div>
+        </div>
+
+        <!-- Data table -->
+        <div class="data-table-container" id="dataTableContainer" style="display: none;">
+          <h3>District Data</h3>
+          <div class="table-search-container">
+            <div class="table-search-bar">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="districtSearchInput" placeholder="Search districts..." class="table-search-input">
+              <i class="fas fa-times search-clear" id="clearDistrictSearch"></i>
+            </div>
+          </div>
+          <table class="data-table" id="dataTable">
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>Population</th>
+                <th>EV Stations</th>
+                <th>Stations per Million</th>
+                <th>New Station Recommendation</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody">
+              <!-- Table rows will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-columns">
+        <div class="footer-column">
+          <div class="footer-logo"><a class="footer-logo" href="index.html">⚡ ChargerFinder</a></div>
+          <p class="footer-description">Your trusted platform for finding EV charging stations across India.</p>
+          <div class="footer-social">
+            <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3><i class="fas fa-map-marker-alt"></i> Our Locations</h3>
+          <div class="footer-address">
+            <p><strong>Head Office:</strong><br>
+            123 EV Plaza, Sector 42<br>
+            New Delhi, 110001</p>
+            <p><strong>Regional Office:</strong><br>
+            456 Green Energy Tower<br>
+            Mumbai, 400001</p>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3><i class="fas fa-link"></i> Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="index.html"><i class="fas fa-angle-right"></i> Home</a></li>
+            <li><a href="stations.html"><i class="fas fa-angle-right"></i> Find Stations</a></li>
+            <li><a href="population_vs_ev.html"><i class="fas fa-angle-right"></i> Data Analysis</a></li>
+            <li><a href="#"><i class="fas fa-angle-right"></i> About Us</a></li>
+            <li><a href="#"><i class="fas fa-angle-right"></i> Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3><i class="fas fa-envelope"></i> Contact Us</h3>
+          <ul class="footer-contact">
+            <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+            <li><i class="fas fa-envelope"></i> info@chargerfinder.com</li>
+          </ul>
+
+          <h3 class="newsletter-title"><i class="fas fa-paper-plane"></i> Newsletter</h3>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Your email address">
+            <button type="submit"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 ChargeFinder. All rights reserved.</p>
+        <p>Designed with <i class="fas fa-heart"></i> for EV enthusiasts</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
